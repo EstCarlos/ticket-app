@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Row, Col, Typography, Button, Divider } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useHideMenu } from "../hooks/useHideMenu";
+import { SocketContext } from "../context/SocketContext";
 
 const { Title, Text } = Typography;
 
 export const CrearTicket = () => {
   useHideMenu(true);
 
+  const { socket } = useContext(SocketContext);
+  const [ticket, setTicket] = useState(null);
+
   const nuevoTicket = () => {
-    console.log("nuevoTicket");
+    socket.emit("solicitar-ticket", null, (ticket) => {
+      setTicket(ticket);
+    });
   };
 
   return (
@@ -30,15 +36,17 @@ export const CrearTicket = () => {
         </Col>
       </Row>
 
-      <Row style={{ marginTop: 100 }}>
-        <Col span={14} offset={6} align="center">
-          <Text level={1}>Su número</Text>
-          <br />
-          <Text type="success" style={{ fontSize: 55 }}>
-            55
-          </Text>
-        </Col>
-      </Row>
+      {ticket && (
+        <Row style={{ marginTop: 100 }}>
+          <Col span={14} offset={6} align="center">
+            <Text level={1}>Su número</Text>
+            <br />
+            <Text type="success" style={{ fontSize: 55 }}>
+              {ticket.numero}
+            </Text>
+          </Col>
+        </Row>
+      )}
     </>
   );
 };
