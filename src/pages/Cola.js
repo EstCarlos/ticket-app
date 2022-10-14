@@ -24,7 +24,7 @@ export const Cola = () => {
   }, [socket]);
 
   useEffect(() => {
-    getUltimos().then((tickets) => setTickets(tickets));
+    getUltimos().then(setTickets);
   }, []);
 
   return (
